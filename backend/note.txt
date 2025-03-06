@@ -1,0 +1,22 @@
+name of pokemon  
+ "forms": [
+        {
+            "name": "pikachu",
+            "url": "https://pokeapi.co/api/v2/pokemon-form/25/"
+        }
+    ],
+img 
+"sprites": {
+        "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/25.png",
+        "back_female": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/female/25.png",
+        "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/25.png",
+        "back_shiny_female": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/female/25.png",
+=====>  "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+
+
+
+/////////////// DATABASE STRUCTURE 
+Users Table: Each user has a unique pokedex_id, forming a one-to-one relationship with the Pokedex table.
+Pokedex Table: Each Pokédex belongs to one user (user_id as a foreign key).
+Pokemon Table: Each Pokémon belongs to a specific Pokédex (pokedex_id as a foreign key).
+/////////////////////////

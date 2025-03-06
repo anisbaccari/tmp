@@ -4,6 +4,11 @@ export default async function (fastify, options) {
   fastify.post('/login', async (request, reply) => {
     const { username, password } = request.body;
 
+    console.log("==============================================="); 
+    console.log(" username : " + username); 
+
+    console.log("==============================================="); 
+    
     if (username === 'admin' && password === 'password') {
       const token = fastify.jwt.sign({ username });
       return { token };
@@ -15,13 +20,15 @@ export default async function (fastify, options) {
     return { message: 'This is a protected route', user: request.user };
   });
 
-  // Route to see tables
-  fastify.get('/Student', async (request, reply) => {
+
+
+//////// Route to see USER 
+  fastify.get('/Users', async (request, reply) => {
     const db = fastify.sqlite.db;
-    console.log("*********HERE************");
+
     try {
       const rows = await new Promise((resolve, reject) => {
-        db.all("SELECT * FROM Student", [], (err, rows) => {
+        db.all("SELECT * FROM Users", [], (err, rows) => {
           if (err) return reject(err);
           resolve(rows);
         });
@@ -30,27 +37,6 @@ export default async function (fastify, options) {
       return reply.send(rows);
     } catch (err) {
       return reply.code(500).send({ error: 'Database error', details: err.message });
-    }
-  });
-
-  // Route to fetch Pokemon data
-  fastify.get('/pokemon/:name', async (request, reply) => {
-    console.log("*********OK************");
-    const { name } = request.params;
-    try {
-      // Make sure the full URL is used for the external API request
-      const response = await fetch("https://pokeapi.co/api/v2/pokemon/pikachu");
-  
-      console.log("*********HERE************");
-      if (!response.ok) {
-        return reply.code(404).send({ error: 'Pokemon not found' });
-      }
-      const data = await response.json();
-      //console.log(data);
-      return reply.send(data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      return reply.code(500).send({ error: 'Failed to fetch data from the API' });
     }
   });
 }

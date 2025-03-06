@@ -1,0 +1,155 @@
+//// db.js 
+import fp from 'fastify-plugin';
+import sqlite3 from 'sqlite3';
+import mkdirp from 'mkdirp';
+
+async function dbConnector (fastify, options) {
+  mkdirp.sync('./database');
+  
+  var db = new sqlite3.Database('./database/data.db');
+  
+
+  db.serialize(function() {
+    /// POKEDEX
+    db.run("CREATE TABLE IF NOT EXISTS Pokedex ( \
+      id INTEGER PRIMARY KEY, \
+      name TEXT NOT NULL, \
+      email TEXT NOT NULL \
+    )");
+ 
+      
+    /// POKEMON 
+  db.run("CREATE TABLE IF NOT EXISTS Pokemon ( \
+      id INTEGER PRIMARY KEY, \
+      name TEXT NOT NULL, \
+      img TEXT , \
+      attack TEXT NOT NULL \
+    )");
+
+  
+  db.run(
+      `INSERT INTO Pokedex (name, img,attack) VALUES (?, ?)`,
+      ["pikachu", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+         "Boom"],
+      function(err) {
+        if (err) {
+          fastify.log.error("Error inserting Pokemon:", err);
+          return;
+        }
+    });
+ 
+ 
+ 
+ 
+ 
+  });
+  const sqlite = {
+  }
+  sqlite.db = db
+  
+  fastify.decorate('sqlite', sqlite)
+}
+
+export default fp(dbConnector);
+
+////// user.js 
+
+
+
+import { authenticate } from '../plugins/auth.js';
+import fastifyPlugin from 'fastify-plugin';
+import sqlite3 from 'sqlite3';
+
+export default async function (fastify, options) {
+  // Create database plugin
+  async function dbConnector(fastify, options) {
+    const db = new sqlite3.Database('./pokemon.db', (err) => {
+      if (err) {
+        console.error('Database connection failed:', err);
+        throw err;
+      }
+    });
+    
+    fastify.decorate('sqlite', { db });
+  }
+
+  // Register the plugin
+  fastify.register(fastifyPlugin(dbConnector));
+
+  fastify.post('/login', async (request, reply) => {
+    const { username, password } = request.body;
+
+    if (username === 'admin' && password === 'password') {
+      const token = fastify.jwt.sign({ username });
+      return { token };
+    }
+    reply.code(401).send({ error: 'Unauthorized' });
+  });
+
+  fastify.get('/profile', { preHandler: authenticate }, async (request, reply) => {
+    return { message: 'This is a protected route', user: request.user };
+  });
+
+  // Route to see tables
+  fastify.get('/Student', async (request, reply) => {
+    const db = fastify.sqlite.db;
+    console.log("*********HERE************");
+    try {
+      const rows = await new Promise((resolve, reject) => {
+        db.all("SELECT * FROM Student", [], (err, rows) => {
+          if (err) return reject(err);
+          resolve(rows);
+        });
+      });
+      console.log("*********OK************");
+      return reply.send(rows);
+    } catch (err) {
+      return reply.code(500).send({ error: 'Database error', details: err.message });
+    }
+  });
+
+  // Route to fetch Pokemon data
+  fastify.get('/pokemon/:name', async (request, reply) => {
+    console.log("*********OK************");
+    const { name } = request.params;
+    try {
+      // Make sure the full URL is used for the external API request
+      const response = await fetch("https://pokeapi.co/api/v2/pokemon/pikachu");
+  
+      console.log("*********HERE************");
+      if (!response.ok) {
+        return reply.code(404).send({ error: 'Pokemon not found' });
+      }
+      const data = await response.json();
+      //console.log(data);
+      return reply.send(data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      return reply.code(500).send({ error: 'Failed to fetch data from the API' });
+    }
+  });
+
+  // Route to fetch Pokedex data
+  fastify.get('/Pokedex', async (request, reply) => {
+    const db = fastify.sqlite.db;
+    
+    try {
+      const rows = await new Promise((resolve, reject) => {
+        db.all("SELECT * FROM Pokedex", [], (err, rows) => {
+          if (err) reject(err);
+          else resolve(rows);
+        });
+      });
+      
+      return rows;
+    } catch (err) {
+      request.log.error(err);
+      throw new Error('Database query failed');
+    }
+  });
+}
+/*
+fetch("https://pokeapi.co/api/v2/pokemon/pikachu").then(res => { 
+    return res.json() 
+  }).then(data => console.log(data));
+  */
