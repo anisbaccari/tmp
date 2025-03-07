@@ -1,5 +1,11 @@
 {
   "devDependencies": {
     "live-server": "^1.2.2"
+  },
+  "scripts": {
+    "start": "live-server --port=8080  --entry-file=index.html --open=./"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
   }
 }

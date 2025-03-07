@@ -1,4 +1,13 @@
-const API_URL = 'http://localhost:3000';
+const dotenv = require("./dotenv");
+
+dotenv.config();
+
+const API_URL = process.env.API_URL;
+const API_KEY = process.env.API_KEY;
+
+
+
+//const API_URL = 'http://localhost:3000';
 let token = '';
 
 async function login() {
@@ -45,6 +54,8 @@ async function getProfile() {
     }
 }
 
+
+//// REQUEST TO DATABASE
 async function getPokemon() 
 {
     const content =document.getElementById('content');
@@ -72,7 +83,7 @@ async function getPokemon()
 
     }
 }
-
+//// REQUEST TO API
 async function getPokemonByName(pokemonName) 
 {
     const content =document.getElementById('content');
@@ -85,11 +96,11 @@ async function getPokemonByName(pokemonName)
             throw new Error(`failed to get Pokemon: ${response.statusText}`);
         const data = await response.json();
         console.log("=============================="); 
-        console.log("Pokemon" , data[0].id); 
+        console.log("Pokemon" , data); 
         console.log("=============================="); 
         const  pokemon = document.createElement('img'); 
-        pokemon.src = data[0].img; 
-        pokemon.alt = data[0].name; 
+        pokemon.src = data.sprites.front_default; 
+        pokemon.alt = data.name; 
         pokemon.className = 'pokemon-img';
         content.appendChild(pokemon);
 
@@ -102,7 +113,7 @@ async function getPokemonByName(pokemonName)
 }
 
 
-function searchPokemon(event) {
+ function searchPokemon(event) {
     event.preventDefault();
     const name = document.getElementById('pokemonName').value;
     getPokemonByName(name);

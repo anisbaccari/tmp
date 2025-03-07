@@ -1,0 +1,84 @@
+Plan:
+1. Create multiple script tags
+2. Show different ways to load scripts (async, defer)
+3. Organize by directory structure
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fastify Frontend</title>
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Load scripts from js directory -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/pokemon.js" defer></script>
+    <script src="js/auth.js" async></script>
+    <script src="js/main.js" defer></script>
+</head>
+<body>
+    <!-- Your existing body content -->
+    
+    <!-- Alternative: Load scripts at end of body -->
+    <script src="js/utils.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
+```
+
+Directory structure:
+```
+project/
+├── index.html
+├── styles.css
+└── js/
+    ├── config.js
+    ├── api.js
+    ├── pokemon.js
+    ├── auth.js
+    ├── main.js
+    ├── utils.js
+    └── app.js
+```
+
+Note:
+- `defer` loads scripts after HTML parsing
+- `async` loads scripts asynchronously
+- Order matters for dependent scripts
+- Place critical scripts in `<head>`
+- Place render-blocking scripts at end of `<body>`
+
+
+
+************************************************
+*** for this command ""scripts": {
+    "start": "live-server --port=8080  --mime-types='{\"js\": \"text/javascript\"}' --entry-file=index.html --open=./"
+  }," i had this issue in consol " Content-Security-Policy: The page’s settings blocked the loading of a resource (img-src) 
+  at http://127.0.0.1:8080/favicon.ico because it violates the following directive: “default-src 'none'”
+  ****
+Plan to fix Content Security Policy (CSP) issue:
+1. Create meta tag in HTML
+2. Add necessary CSP directives
+3. Include all required resource types
+
+```html
+<!-- Add this in the <head> of index.html -->
+<meta http-equiv="Content-Security-Policy" 
+      content="default-src 'self';
+               img-src 'self' data: https: http:;
+               script-src 'self' 'unsafe-inline';
+               style-src 'self' 'unsafe-inline';
+               connect-src 'self' http://localhost:3000">
+```
+
+CSP directives explained:
+- `default-src 'self'`: Allow resources from same origin
+- `img-src 'self' data: https: http:`: Allow images from same origin, data URLs, and HTTP/HTTPS
+- `script-src 'self' 'unsafe-inline'`: Allow scripts from same origin and inline scripts
+- `style-src 'self' 'unsafe-inline'`: Allow styles from same origin and inline styles
+- `connect-src 'self' http://localhost:3000`: Allow API connections to backend
+
+Note: Place meta tag before other resources in head section.

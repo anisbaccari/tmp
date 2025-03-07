@@ -25,14 +25,13 @@ fastify.get('/Pokemon', async (request, reply) => {
     const { name } = request.params;
     console.log("Pokemon name : ", name);
     try {
-      // Make sure the full URL is used for the external API request
       const response =  await fetch(`https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`);
   
       if (!response.ok) {
         return reply.code(404).send({ error: 'Pokemon not found' });
       }
       const data = await response.json();
-      //console.log(data);
+      console.log(data);
       return reply.send(data);
     } catch (error) {
       console.error('Error fetching data:', error);
