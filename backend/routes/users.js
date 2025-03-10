@@ -42,31 +42,46 @@ export default async function (fastify, options) {
 
   fastify.post('/get-user', async (request, reply) => {
     const db = fastify.sqlite.db;
-
-    //const username = "anis"; // Assuming request.body contains a JSON object with a username field
+  
+    // Get username from request body
     const username = request.body.username || request.body.value;
+  
     console.log("******************GETUSER**********************");
-    console.log(" username : " + request.body.value); 
-    console.log("****************************************");
-
+    console.log("Searching for username:", username);
+    
     try {
       const user = await new Promise((resolve, reject) => {
-        db.get(`SELECT * FROM Users WHERE name = ?`, [username], (err, row) => {
+        // Debug: Log the actual SQL query
+        const query = `SELECT * FROM Users WHERE name = ?`;
+        console.log('Executing query:', query, 'with params:', [username]);
+        
+        db.get(query, [username], (err, row) => {
           if (err) {
-            fastify.log.error("Error retrieving user:", err);
-            return reject(new Error (" databases error  "));
+            fastify.log.error("Database error:", err);
+            return reject(new Error("Database error"));
           }
+          
+          console.log("Query result: ", row.name);
+          
           if (!row) {
-            return reject(new Error (" User error  "));
+            return reject(new Error(`User not found: ${username}`));
           }
-          fastify.log.info("User retrieved:", row);
-          console.log("****************************************");
+          
+          fastify.log.info("User retrieved:", row.name);
           resolve(row);
         });
       });
-      return reply.send(user);
+      ////// LOCAL STORAGE -> return json object 
+       
+      return reply.send({
+        id : user.id,
+        name : user.name,
+        pokedex_id : user.pokedex_id
+      });
     } catch (err) {
-      return reply.code(500).send({ error: 'Database error', details: err.message });
+      console.error("Error in /get-user:", err.message);
+      return reply.code(err.message.includes('not found') ? 404 : 500)
+        .send({ error: err.message });
     }
   });
 /*

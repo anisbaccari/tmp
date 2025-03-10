@@ -34,19 +34,32 @@ async function sendValue(name) {
         },
         body: JSON.stringify({ value: name })
       });
-      const data = await response.json()
-      const new_name = data.name;
-      const pokedex_id = data.pokedex_id; 
-     // const  pokedex = document.createElement('p'); 
-     document.getElementById('output').innerText = `User !\n name: ${new_name}\n pokeid:${pokedex_id}`;
-      console.log('Response from server:', data);
+      const data = await response.json();
+     if(response.ok)
+     {
+         ///// LOCAL STORAGE ////
+        localStorage.setItem('userID', data.id);
+
+        //// DISPLAY USER 
+        const userid = data.id;
+        const new_name = data.name;
+        const pokedex_id = data.pokedex_id; 
+        document.getElementById('output').innerText = `User !\n name: ${new_name}\n pokeid:${pokedex_id}`;
+        console.log('Response from server:', data);
+
+     } else {
+         document.getElementById('output').innerText = " USER NOT FOUND";
+     }
+
     } catch (error) {
       console.error('Error sending value:', error);
+      document.getElementById('output').innerText = `User not fund ! `;
     }
+     
   }
 
 
-function searchUser(event)
+function selectUser(event)
 {
     event.preventDefault(); 
     const name = document.getElementById('userInput').value;
