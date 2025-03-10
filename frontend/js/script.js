@@ -1,13 +1,8 @@
-const dotenv = require("./dotenv");
+//const dotenv = require("./dotenv");
 
-dotenv.config();
+//dotenv.config();
 
-const API_URL = process.env.API_URL;
-const API_KEY = process.env.API_KEY;
-
-
-
-//const API_URL = 'http://localhost:3000';
+const API_URL = 'http://localhost:3000';
 let token = '';
 
 async function login() {

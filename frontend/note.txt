@@ -82,3 +82,14 @@ CSP directives explained:
 - `connect-src 'self' http://localhost:3000`: Allow API connections to backend
 
 Note: Place meta tag before other resources in head section.
+
+******************
+
+//const dotenv = require("./dotenv");
+
+//dotenv.config();
+
+const API_URL = process.env.API_URL;
+
+--> if dotenv its not resolve , the const API_URL var next to it will be acces befor initialized
+"Error: can't access lexical declaration 'API_URL' before initialization"

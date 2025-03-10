@@ -20,7 +20,7 @@ fastify.get('/Pokemon', async (request, reply) => {
 
 
 // Route to fetch Pokemon data
-  fastify.get('/Pokemon/:name', async (request, reply) => {
+  fastify.get('/Pokemon/id/:name', async (request, reply) => {
     console.log("*********  ===== /Pokemon:name  ===== ************");
     const { name } = request.params;
     console.log("Pokemon name : ", name);
@@ -46,4 +46,12 @@ fastify.get('/Pokemon', async (request, reply) => {
 fetch("https://pokeapi.co/api/v2/pokemon/pikachu").then(res => { 
     return res.json() 
   }).then(data => console.log(data));
+  
+  db.all("SELECT * FROM Pokemon WHERE pokedex_id = ?", [pokedexId], (err, rows) => {
+    if (err) {
+      console.error("Error fetching Pokemon:", err.message);
+      return;
+    }
+    console.log("Pokemon entries:", rows);
+  });
   */

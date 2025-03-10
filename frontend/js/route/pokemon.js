@@ -1,4 +1,3 @@
-export const API_URL = 'http://localhost:3000';
 
 //// REQUEST TO DATABASE
 async function getPokemon() 
@@ -7,7 +6,7 @@ async function getPokemon()
 
     try 
     {
-        const response = await fetch(`${API_URL}/Pokemon` );
+        const response = await fetch(`http://localhost:3000/Pokemon` );
 
         if(!response.ok)
             throw new Error(`failed to get Pokemon: ${response.statusText}`);
@@ -35,7 +34,7 @@ async function getPokemonByName(pokemonName)
 
     try 
     {
-        const response = await fetch(`${API_URL}/Pokemon/${pokemonName}` );
+        const response = await fetch(`http://localhost:3000/Pokemon/${pokemonName}` );
 
         if(!response.ok)
             throw new Error(`failed to get Pokemon: ${response.statusText}`);

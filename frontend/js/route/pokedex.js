@@ -1,4 +1,3 @@
-export const API_URL = 'http://localhost:3000';
 
 
 
@@ -9,18 +8,15 @@ async function getPokedex()
 
     try 
     {
-        const response = await fetch(`${API_URL}/Pokedex` );
+        const response = await fetch(`http://localhost:3000/Pokedex` );
 
         if(!response.ok)
             throw new Error(`failed to get Pokedex: ${response.statusText}`);
         const data = await response.json();
         console.log("=============================="); 
         console.log("Pokedex" , data[0].id); 
-        console.log("=============================="); 
+        console.log("==============================");
         const  pokedex = document.createElement('img'); 
-        pokedex.src = data[0].img; 
-        pokedex.alt = data[0].name; 
-        pokedex.className = 'pokedex-img';
         content.appendChild(pokedex);
 
     }
@@ -37,7 +33,7 @@ async function getpokedexByName(pokedexName)
 
     try 
     {
-        const response = await fetch(`${API_URL}/pokedex/${pokedexName}` );
+        const response = await fetch(`http://localhost:3000/pokedex/${pokedexName}` );
 
         if(!response.ok)
             throw new Error(`failed to get pokedex: ${response.statusText}`);

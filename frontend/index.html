@@ -22,6 +22,7 @@
     <button onclick="login()">Login</button>
     <button onclick="getProfile()">Get Profile</button>
     <button onclick="getPokemon()">See a Pokemon</button>
+    <button onclick="getPokedex()">See a Pokedex</button>
     <pre id="output"></pre>
     <div id="content" class="content"">
         <form id="pokemonForm" onsubmit="searchPokemon(event)">
@@ -29,8 +30,18 @@
             <input type="text" id="pokemonName" name="pokemonName" required>
             <button type="submit">Search Pokemon</button>
         </form>
+        <form onsubmit="searchUser(event)">
+            <label for="userInput">Select User </label>
+            <input type="text" id="userInput" name="userInput" required>
+            <button type="submit">Send Value</button>
+        </form>
     </div>
-    
-    <script src="js/script.js"></script>
+    <div class="Contentresult">
+        
+    </div>
+    <script src="js/route/pokedex.js"></script>
+    <script src="js/route/pokemon.js"></script>
+    <script src="js/route/user.js"></script>
+
 </body>
 </html>

@@ -46,7 +46,7 @@ async function dbConnector(fastify, options) {
 
         db.run(
           `INSERT INTO Users (name, email, pokedex_id) VALUES (?, ?, ?)`,
-          ["Dr. Smith", "drsmith@example.com", pokedexId],
+          ["anis", "drsmith@example.com", pokedexId],
           function (err) {
             if (err) {
               fastify.log.error("Error inserting User:", err);

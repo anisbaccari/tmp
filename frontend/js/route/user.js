@@ -4,12 +4,11 @@ let token = '';
 
  async function login() {
 
-   // console.log(process.env.URL);
     try {
         const response = await fetch(`${API_URL}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: 'admin', password: 'password' })
+            body: JSON.stringify({ username: 'anis', password: 'password' })
         });
 
         if (!response.ok) {
@@ -25,6 +24,34 @@ let token = '';
     }
 }
 
+async function sendValue(name) {
+    console.log("*************SEND VALUE() : ",name );
+    try {
+      const response = await fetch('http://localhost:3000/get-user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ value: name })
+      });
+      const data = await response.json()
+      const new_name = data.name;
+      const pokedex_id = data.pokedex_id; 
+     // const  pokedex = document.createElement('p'); 
+     document.getElementById('output').innerText = `User !\n name: ${new_name}\n pokeid:${pokedex_id}`;
+      console.log('Response from server:', data);
+    } catch (error) {
+      console.error('Error sending value:', error);
+    }
+  }
+
+
+function searchUser(event)
+{
+    event.preventDefault(); 
+    const name = document.getElementById('userInput').value;
+    sendValue(name);
+}
 async function getProfile() {
     try {
         if (!token) {

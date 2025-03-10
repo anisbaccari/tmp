@@ -6,10 +6,12 @@ export default async function (fastify, options) {
 
     console.log("==============================================="); 
     console.log(" username : " + username); 
-
     console.log("==============================================="); 
     
     if (username === 'admin' && password === 'password') {
+      const token = fastify.jwt.sign({ username });
+      return { token };
+    } else if (username === 'anis' && password === 'password') {
       const token = fastify.jwt.sign({ username });
       return { token };
     }
@@ -20,9 +22,7 @@ export default async function (fastify, options) {
     return { message: 'This is a protected route', user: request.user };
   });
 
-
-
-//////// Route to see USER 
+  // Route to see USER 
   fastify.get('/Users', async (request, reply) => {
     const db = fastify.sqlite.db;
 
@@ -39,9 +39,113 @@ export default async function (fastify, options) {
       return reply.code(500).send({ error: 'Database error', details: err.message });
     }
   });
-}
+
+  fastify.post('/get-user', async (request, reply) => {
+    const db = fastify.sqlite.db;
+
+    //const username = "anis"; // Assuming request.body contains a JSON object with a username field
+    const username = request.body.username || request.body.value;
+    console.log("******************GETUSER**********************");
+    console.log(" username : " + request.body.value); 
+    console.log("****************************************");
+
+    try {
+      const user = await new Promise((resolve, reject) => {
+        db.get(`SELECT * FROM Users WHERE name = ?`, [username], (err, row) => {
+          if (err) {
+            fastify.log.error("Error retrieving user:", err);
+            return reject(new Error (" databases error  "));
+          }
+          if (!row) {
+            return reject(new Error (" User error  "));
+          }
+          fastify.log.info("User retrieved:", row);
+          console.log("****************************************");
+          resolve(row);
+        });
+      });
+      return reply.send(user);
+    } catch (err) {
+      return reply.code(500).send({ error: 'Database error', details: err.message });
+    }
+  });
 /*
-fetch("https://pokeapi.co/api/v2/pokemon/pikachu").then(res => { 
-    return res.json() 
-  }).then(data => console.log(data));
+///////////// TMP ////////////////////
+
+fastify.post('/get-user', async (request, reply) => {
+  const db = fastify.sqlite.db;
+
+  // Get username from request body
+  const username = request.body.username || request.body.value;
+
+  console.log("******************GETUSER**********************");
+  console.log("Searching for username:", username);
+  
+  try {
+    const user = await new Promise((resolve, reject) => {
+      // Debug: Log the actual SQL query
+      const query = `SELECT * FROM Users WHERE name = ?`;
+      console.log('Executing query:', query, 'with params:', [username]);
+      
+      db.get(`SELECT * FROM Users WHERE name = ?`, [username], (err, row) => {
+        if (err) {
+          fastify.log.error("Database error:", err);
+          return reject(new Error("Database error"));
+        }
+        
+        console.log("Query result:", row);
+        
+        if (!row) {
+          return reject(new Error(`User not found: ${username}`));
+        }
+        
+        fastify.log.info("User retrieved:", row);
+        resolve(row);
+      });
+    });
+    
+    return reply.send(user);
+  } catch (err) {
+    console.error("Error in /get-user:", err.message);
+    return reply.code(err.message.includes('not found') ? 404 : 500)
+      .send({ error: err.message });
+  }
+});
+*/
+
+
+
+//// EXAMPLE BASE 
+/*
+  fastify.post('/get-user', async (request, reply) => {
+    const db = fastify.sqlite.db;
+
+    //const username = "anis"; // Assuming request.body contains a JSON object with a username field
+    const username = request.body.username || request.body.value;
+    console.log("******************GETUSER**********************");
+    console.log(" username : " + request.body.value); 
+    console.log("****************************************");
+
+    try {
+      const user = await new Promise((resolve, reject) => {
+        db.get(`SELECT * FROM Users WHERE name = ?`, [username], (err, row) => {
+          if (err) {
+            fastify.log.error("Error retrieving user:", err);
+            return reject(new Error (" databases error  "));
+          }
+          if (!row) {
+            return reject(new Error (" User error  "));
+          }
+          fastify.log.info("User retrieved:", row);
+          console.log("****************************************");
+          resolve(row);
+        });
+      });
+      return reply.send(user);
+    } catch (err) {
+      return reply.code(500).send({ error: 'Database error', details: err.message });
+    }
+  });
   */
+}
+
