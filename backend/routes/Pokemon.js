@@ -38,10 +38,19 @@ fastify.get('/Pokemon', async (request, reply) => {
       return reply.code(500).send({ error: 'Failed to fetch data from the API' });
     }
   });
-}
+  
+  
+  fastify.get('/Pokemon/:pokedexId', async (request,reply) => 
+  {
 
-
-
+      const pokedexid = request.params;
+      console.log("\n******************************\n");
+      console.log("[/Pokemon:pokedexId] : request params : " + pokedexid); 
+      console.log("\n******************************\n");
+      
+  });
+  }
+    
 /*
 fetch("https://pokeapi.co/api/v2/pokemon/pikachu").then(res => { 
     return res.json() 

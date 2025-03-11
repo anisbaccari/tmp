@@ -1,8 +1,6 @@
 
-
-
 //// REQUEST TO DATABASE
-async function getPokedex() 
+export async function getPokedex() 
 {
     const content =document.getElementById('content');
 
@@ -26,8 +24,35 @@ async function getPokedex()
 
     }
 }
+
+
+export async function displayPokedex(userid)
+{
+    console.log(" >> [Pokedex]: userid " + userid); 
+    try
+    {
+        const response = await fetch(`http://localhost:3000/Pokedex` ,{
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({value : userid })
+        });
+
+        if(!response.ok)
+            throw new Error(" >> [Pokedex]: failed to get repsonse");
+        console.log(" RESPONSE : " + response);
+
+    }
+    catch(err)
+    {
+        console.log(" >> [Pokedex]: " + err.message); 
+    }
+
+}
+
 //// REQUEST TO API
-async function getpokedexByName(pokedexName) 
+export async function getpokedexByName(pokedexName) 
 {
     const content =document.getElementById('content');
 

@@ -16,6 +16,7 @@ async function dbConnector(fastify, options) {
       pokedex_id INTEGER UNIQUE, 
       FOREIGN KEY (pokedex_id) REFERENCES Pokedex(id) ON DELETE SET NULL
     )`);
+    
 
     ///// POKEDEX TABLE (Each Pokedex belongs to one User) /////
     db.run(`CREATE TABLE IF NOT EXISTS Pokedex ( 
@@ -34,16 +35,15 @@ async function dbConnector(fastify, options) {
       FOREIGN KEY (pokedex_id) REFERENCES Pokedex(id) ON DELETE CASCADE
     )`);
 
-    ///// INSERT A SAMPLE USER WITH A POKEDEX /////
     db.run(
-      `INSERT INTO Pokedex DEFAULT VALUES`, // Creates an empty Pokedex entry
+      `INSERT INTO Pokedex DEFAULT VALUES`,
       function (err) {
         if (err) {
           fastify.log.error("Error creating Pokedex:", err);
           return;
         }
         const pokedexId = this.lastID;
-
+    
         db.run(
           `INSERT INTO Users (name, email, pokedex_id) VALUES (?, ?, ?)`,
           ["anis", "drsmith@example.com", pokedexId],
@@ -52,27 +52,45 @@ async function dbConnector(fastify, options) {
               fastify.log.error("Error inserting User:", err);
               return;
             }
+            const userId = this.lastID; // Get the new user's ID
+    
+            // Link Pokedex to User
+            db.run(
+              `UPDATE Pokedex SET user_id = ? WHERE id = ?`,
+              [userId, pokedexId],
+              function(err) {
+                if (err) {
+                  fastify.log.error("Error linking Pokedex to User:", err);
+                  return;
+                }
+                console.log(`✅ Linked Pokedex ${pokedexId} to User ${userId}`);
+              }
+            );
           }
         );
+         ///// INSERT A SAMPLE POKEMON LINKED TO A POKEDEX /////
+        db.run(
+          `INSERT INTO Pokemon (name, img, attack, pokedex_id) VALUES (?, ?, ?, ?)`,
+          [
+            "Pikachu",
+            "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+            "Thunderbolt",
+            pokedexId, // Pokedex ID (assuming Dr. Smith's Pokedex has ID 1)
+          ],
+          function (err) {
+            if (err) {
+              fastify.log.error("Error inserting Pokemon:", err);
+              return;
+            }
+            const pokemonid = this.lastID;
+            console.log(`✅ Linked Pokemon ${pokemonid} to Pokedex ${pokedexId}`);
+          }
+        );
+        
       }
     );
 
-    ///// INSERT A SAMPLE POKEMON LINKED TO A POKEDEX /////
-    db.run(
-      `INSERT INTO Pokemon (name, img, attack, pokedex_id) VALUES (?, ?, ?, ?)`,
-      [
-        "Pikachu",
-        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
-        "Thunderbolt",
-        1, // Pokedex ID (assuming Dr. Smith's Pokedex has ID 1)
-      ],
-      function (err) {
-        if (err) {
-          fastify.log.error("Error inserting Pokemon:", err);
-          return;
-        }
-      }
-    );
+   
   });
 
   fastify.decorate('sqlite', { db });

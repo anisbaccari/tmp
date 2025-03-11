@@ -36,29 +36,18 @@
             <button type="submit">Send Value</button>
         </form>
     </div>
-    <button onclick="toggleContent()">Toggle Content </button>
+  
     <div class="Contentresult" id="Contentresult">
-    </div>
-    <script>
+        <p id="txtresult"></p>
+        <div id="result">
 
-        function toggleContent() {
-            const userid = localStorage.getItem('userID');
-            console.log("USER ID ", userid); 
-            if (userid === "1" ) {
-                document.getElementById('Contentresult').innerText += " NEW USER ";    
-            }
-             else 
-            document.getElementById('Contentresult').innerText = " NO USER ";    
-        
-      }
-        // Initialize page on load
-        window.onload = () => {
-            toggleContent();
-        };
-    </script>
-    <script src="js/route/pokedex.js"></script>
-    <script src="js/route/pokemon.js"></script>
-    <script src="js/route/user.js"></script>
+        </div>
+    </div>
+  
+    <script  src="js/route/pokedex.js"></script>
+    <script  src="js/route/pokemon.js"></script>
+    <script  src="js/route/user.js"></script>
+    <script type="module" src="js/utils/utils.js"></script>
 
 </body>
 </html>

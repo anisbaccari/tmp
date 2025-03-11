@@ -35,21 +35,18 @@ async function sendValue(name) {
         body: JSON.stringify({ value: name })
       });
       const data = await response.json();
-     if(response.ok)
-     {
-         ///// LOCAL STORAGE ////
-        localStorage.setItem('userID', data.id);
+        if(response.ok)
+        {
+            ///// LOCAL STORAGE ////
+            localStorage.setItem('userID', data.id);
 
-        //// DISPLAY USER 
-        const userid = data.id;
-        const new_name = data.name;
-        const pokedex_id = data.pokedex_id; 
-        document.getElementById('output').innerText = `User !\n name: ${new_name}\n pokeid:${pokedex_id}`;
-        console.log('Response from server:', data);
-
-     } else {
-         document.getElementById('output').innerText = " USER NOT FOUND";
-     }
+            //// DISPLAY USER 
+            const userid = data.id;
+            const new_name = data.name;
+            const pokedex_id = data.pokedex_id; 
+            document.getElementById('output').innerText = `User !\n name: ${new_name}\n pokeid:${pokedex_id}`;
+            console.log('Response from server:', data);
+        } 
 
     } catch (error) {
       console.error('Error sending value:', error);
@@ -58,7 +55,7 @@ async function sendValue(name) {
      
   }
 
-
+/// BTN function 
 function selectUser(event)
 {
     event.preventDefault(); 

@@ -61,12 +61,10 @@ export default async function (fastify, options) {
             return reject(new Error("Database error"));
           }
           
-          console.log("Query result: ", row.name);
-          
           if (!row) {
             return reject(new Error(`User not found: ${username}`));
           }
-          
+          console.log("Query result: ", row.name);
           fastify.log.info("User retrieved:", row.name);
           resolve(row);
         });
