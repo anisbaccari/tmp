@@ -3,7 +3,7 @@
 
 */
 
-import { displayPokedex, getPokedex } from './../route/pokedex.js'
+import { fetchPokedex, getPokedex } from './../route/pokedex.js'
 
 // ADD EXPORTED FUNCTION TO THE DOM 
 window.getPokedex =getPokedex;
@@ -11,7 +11,7 @@ window.getPokedex =getPokedex;
 
 window.onload = () => {
     toggleContent();
-    display(displayPokedex);
+    display(fetchPokedex);
 };
 
 function toggleContent() {
@@ -23,8 +23,8 @@ function toggleContent() {
         document.getElementById('txtresult').innerText = " NEW USER (" + userid + ")";
         localStorage.setItem( 'isConnect', 'true');
     }
-     else 
-    document.getElementById('txtresult').innerText = " NO USER ";    
+    else 
+        document.getElementById('txtresult').innerText = " NO USER ";    
 
 }
 
@@ -42,7 +42,7 @@ function display(callback){
 
     content.appendChild(btn); 
     console.log('**** button added *****');
-    btn.onclick=() => displayPokedex(userid);
+    btn.onclick=() => fetchPokedex(userid);
 }
 
 function hello()

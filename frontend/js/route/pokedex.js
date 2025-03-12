@@ -25,8 +25,18 @@ export async function getPokedex()
     }
 }
 
+function displayPokedex(name,img)
+{
+    const content =document.getElementById('result');
+    const myimg=document.createElement('img'); 
+    myimg.src =img; 
+    myimg.alt = name;
 
-export async function displayPokedex(userid)
+    content.appendChild(myimg);
+
+}
+
+export async function fetchPokedex(userid)
 {
     console.log(" >> [Pokedex]: userid " + userid); 
     try
@@ -41,7 +51,12 @@ export async function displayPokedex(userid)
 
         if(!response.ok)
             throw new Error(" >> [Pokedex]: failed to get repsonse");
-        console.log(" RESPONSE : " + response);
+        const data = await response.json();
+        console.log("RESPONSE:", JSON.stringify(data, null, 2)); // Log the response data
+        console.log(data.pokedex[0].name);
+        const name = data.pokedex[0].name; 
+        const img =  data.pokedex[0].img;
+        displayPokedex(name,img);
 
     }
     catch(err)
@@ -50,6 +65,7 @@ export async function displayPokedex(userid)
     }
 
 }
+
 
 //// REQUEST TO API
 export async function getpokedexByName(pokedexName) 
