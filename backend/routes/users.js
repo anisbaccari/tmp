@@ -70,7 +70,7 @@ export default async function (fastify, options) {
       });
       ////// LOCAL STORAGE -> return json object 
        
-      console.log("\n [get-user] >> User retrieve : ",user.body);
+      console.log("\n [get-user] >> User retrieve : ",user.name , " with ID : ", user.id,"\n");
       return reply.send({
         id : user.id,
         name : user.name,

@@ -7,7 +7,7 @@ import fastifyStatic from '@fastify/static';
 import { fileURLToPath } from 'url';
 /// IMPORT DB
 import dbCrud from '../plugins/db.js';  
-import dbPlugin from '../plugins/Crud.js';  
+import dbPlugin from '../plugins/Crud/UserCrud.js';  
 //// IMPORT ROUTES 
 import PokedexRoutes from '../routes/Pokedex.js';
 import PokemonRoutes from '../routes/Pokemon.js';

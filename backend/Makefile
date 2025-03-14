@@ -10,3 +10,5 @@ run :
 new : 
 	@rm -rf $(db)
 	@make run  
+
+

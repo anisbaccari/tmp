@@ -84,7 +84,8 @@ async function postUser(name,mail)
         if(response.ok)
         {
             console.log("\n ::[POST-USER] response ok :", response);
-        }
+        }else 
+            console.log("::[POST-USER]:: response err :",response);
     }catch(err)
     {
         console.error("::[POST-USER]:: response error : ", err);

@@ -9,28 +9,48 @@
         console.log("=*= [add-user] : request", request.body); 
         // 1. Add new User
         const userId = await new Promise((resolve, reject) => {
-          db.run(  `INSERT INTO Users (name, email) VALUES (?, ?)`,
+          db.run(
+            `INSERT INTO Users (name, email) VALUES (?, ?)`,
             [name, mail],
-            function(err) {
-              if (err) reject(err);
-              resolve(this.lastID); /// Last User Id generate by SQL 
-            }.bind(db)
-            
+            function (err) {
+              if (err) {
+                console.error("Database error:", err);
+                return reject(new Error("Failed to create user"));
+              }
+              if (!this.lastID) {
+                return reject(new Error("No ID returned from insert"));
+              }
+              console.log(`✅ User Created -> ID: ${this.lastID}`);
+              resolve(this.lastID);
+            }
           );
-        });
+        }); 
+      
         console.log(`✅ User Created -> ID: ${userId}, Name: ${name}, Email: ${mail}`);
+
+
+
+
+        ///***** */
          
         // 2. Create Pokedex
-        const pokedexId = await new Promise((resolve, reject) => {
-          db.run(
-            `INSERT INTO Pokedex (user_id) VALUES (?)`,
-            [userId],
-            function(err) {
-              if (err) reject(err);
-              resolve(this.lastID);
-            }.bind(db)
-          );
-        });
+      const pokedexId = await new Promise((resolve, reject) => {
+        db.run(
+          `INSERT INTO Pokedex (user_id) VALUES (?)`,
+          [userId],
+          function (err) {
+            if (err) {
+              console.error("Database error:", err);
+              return reject(new Error("Failed to create Pokedex"));
+            }
+            if (!this.lastID) {
+              return reject(new Error("No ID returned from insert"));
+            }
+            console.log(`✅ Pokedex Created -> ID: ${this.lastID}`);
+            resolve(this.lastID);
+          }
+        );
+      });
         console.log(`✅ Pokedex Created -> ID: ${pokedexId}, User_ID: ${userId}`);
 
           // 3. Link Pokedex to User
