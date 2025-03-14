@@ -24,6 +24,7 @@ let token = '';
     }
 }
 
+//// ==== SEARCH USER 
 async function sendValue(name) {
     console.log("*************SEND VALUE() : ",name );
     try {
@@ -62,6 +63,44 @@ function selectUser(event)
     const name = document.getElementById('userInput').value;
     sendValue(name);
 }
+
+//// ===== ADD USER 
+
+
+async function postUser(name,mail)
+{
+    console.log("\n ::[Post-User ]:: \n"); 
+
+    try
+    {
+        const data = await fetch(`${API_URL}/add-user`,{
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name,mail })
+        });
+        const response = await data.json();
+        if(response.ok)
+        {
+            console.log("\n ::[POST-USER] response ok :", response);
+        }
+    }catch(err)
+    {
+        console.error("::[POST-USER]:: response error : ", err);
+    }
+     
+}
+//// BTN ADD USER 
+function addUser(event)
+{
+    event.preventDefault(); 
+    const name = document.getElementById('username').value;
+    const mail = document.getElementById('usermail').value;
+    console.log("\n ::[POST-USER] sending :", name, " - " , mail);
+    postUser(name,mail);
+}
+
 async function getProfile() {
     try {
         if (!token) {

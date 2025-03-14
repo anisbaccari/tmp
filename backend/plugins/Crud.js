@@ -4,21 +4,21 @@
       try{
 
         const db = fastify.sqlite.db;
-        const { username, email } = request.body;
+        const { name, mail } = request.body;
         
-        console.log("=*= [add-user] : request", request); 
+        console.log("=*= [add-user] : request", request.body); 
         // 1. Add new User
         const userId = await new Promise((resolve, reject) => {
           db.run(  `INSERT INTO Users (name, email) VALUES (?, ?)`,
-            [username, email],
+            [name, mail],
             function(err) {
               if (err) reject(err);
               resolve(this.lastID); /// Last User Id generate by SQL 
-            }
+            }.bind(db)
             
           );
         });
-        console.log(`✅ User Created -> ID: ${userId}, Name: ${username}, Email: ${email}`);
+        console.log(`✅ User Created -> ID: ${userId}, Name: ${name}, Email: ${mail}`);
          
         // 2. Create Pokedex
         const pokedexId = await new Promise((resolve, reject) => {
@@ -28,7 +28,7 @@
             function(err) {
               if (err) reject(err);
               resolve(this.lastID);
-            }
+            }.bind(db)
           );
         });
         console.log(`✅ Pokedex Created -> ID: ${pokedexId}, User_ID: ${userId}`);
@@ -59,5 +59,7 @@
           details: err.message 
         });
       }
+      
+    
   });
 } 
