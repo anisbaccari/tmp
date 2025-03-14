@@ -21,7 +21,7 @@ fastify.get('/Pokedex', async (request, reply) => {
 
 fastify.post('/Pokedex', async (request, reply) => {
   const db = fastify.sqlite.db;
-  const userID = request.body.value;
+  const userID = request.body.userid;
 
   console.log("=*= [/Pokedex] : TRYING to DISPLAY POKEDEX");
   console.log("UserID:", userID);
@@ -41,7 +41,7 @@ fastify.post('/Pokedex', async (request, reply) => {
               console.log("\n******************\n");
               console.log("=*= [/Pokedex] : rows:", JSON.stringify(rows, null, 2));
               const pokedex_id = rows[0].id;
-              console.log("\n=*= [/Pokedex]  : pokedex_id : \n",pokedex_id);
+              console.log("\n=*= [/Pokedex]  : pokedex_id : ",pokedex_id);
               console.log("\n******************\n");
               
               db.all(`SELECT p.* 

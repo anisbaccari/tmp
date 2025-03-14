@@ -1,7 +1,8 @@
 export default async function (fastify, options) {
  
 //////// Route to see Pokemon 
-fastify.get('/Pokemon', async (request, reply) => {
+/// GET /X => all route -- GET /X/ only route /X
+fastify.get('/Pokemon/', async (request, reply) => {
   const db = fastify.sqlite.db;
   console.log("*********  =====  /Pokemon ===== ************");
   try {
@@ -20,11 +21,13 @@ fastify.get('/Pokemon', async (request, reply) => {
 
 
 // Route to fetch Pokemon data
-  fastify.get('/Pokemon/id/:name', async (request, reply) => {
+  fastify.get('/Pokemon/id/:id?', async (request, reply) => {
     console.log("*********  ===== /Pokemon:name  ===== ************");
-    const { name } = request.params;
-    console.log("Pokemon name : ", name);
-    try {
+   // const  name  = request.query.id;
+   const  {name}  = request.query;
+    
+   console.log("Pokemon name : ", name);
+/*     try {
       const response =  await fetch(`https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`);
   
       if (!response.ok) {
@@ -36,19 +39,9 @@ fastify.get('/Pokemon', async (request, reply) => {
     } catch (error) {
       console.error('Error fetching data:', error);
       return reply.code(500).send({ error: 'Failed to fetch data from the API' });
-    }
+    } */
   });
   
-  
-  fastify.get('/Pokemon/:pokedexId', async (request,reply) => 
-  {
-
-      const pokedexid = request.params;
-      console.log("\n******************************\n");
-      console.log("[/Pokemon:pokedexId] : request params : " + pokedexid); 
-      console.log("\n******************************\n");
-      
-  });
   }
     
 /*

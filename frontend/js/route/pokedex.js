@@ -46,7 +46,7 @@ export async function fetchPokedex(userid)
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({value : userid })
+            body: JSON.stringify({userid : userid })
         });
 
         if(!response.ok)

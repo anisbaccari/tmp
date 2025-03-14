@@ -64,13 +64,13 @@ export default async function (fastify, options) {
           if (!row) {
             return reject(new Error(`User not found: ${username}`));
           }
-          console.log("Query result: ", row.name);
-          fastify.log.info("User retrieved:", row.name);
+          console.log("Query result: ", row.name, " user id :", row.id);
           resolve(row);
         });
       });
       ////// LOCAL STORAGE -> return json object 
        
+      console.log("\n [get-user] >> User retrieve : ",user.body);
       return reply.send({
         id : user.id,
         name : user.name,
